@@ -1,0 +1,375 @@
+/* ════════════════════════════════════════════════
+   3D Solar System — style.css
+   Deep space dark theme · Glassmorphism panels
+   ════════════════════════════════════════════════ */
+
+/* ── Tokens ──────────────────────────────────── */
+:root {
+  --bg:           #020509;
+  --glass-bg:     rgba(4, 9, 22, 0.82);
+  --glass-border: rgba(70, 160, 220, 0.14);
+  --glass-shine:  rgba(255, 255, 255, 0.04);
+
+  --gold:     #f5c842;
+  --blue:     #4fc3f7;
+  --blue-dim: #2a88bb;
+
+  --txt-hi:  #ddeeff;
+  --txt-mid: #6fa8c8;
+  --txt-lo:  #3a6080;
+
+  --ff-head: 'Orbitron', sans-serif;
+  --ff-body: 'Inter', sans-serif;
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Reset ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+
+body {
+  background: var(--bg);
+  color: var(--txt-hi);
+  font-family: var(--ff-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Canvas ──────────────────────────────────── */
+#solar-canvas {
+  position: fixed;
+  inset: 0;
+  display: block;
+  cursor: grab;
+}
+#solar-canvas:active { cursor: grabbing; }
+
+/* ── Header ──────────────────────────────────── */
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  background: linear-gradient(to bottom, rgba(2,5,9,0.92) 0%, transparent 100%);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--ff-head);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--txt-hi);
+  user-select: none;
+}
+
+.logo-sun {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ffe580, #f5a623 55%, #b35000);
+  box-shadow: 0 0 18px rgba(245, 166, 35, 0.7), 0 0 6px rgba(255,229,128,0.9);
+  flex-shrink: 0;
+}
+
+.accent { color: var(--gold); }
+
+.hint-bar {
+  display: flex;
+  gap: 22px;
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.73rem;
+  font-weight: 300;
+  color: var(--txt-lo);
+  letter-spacing: 0.02em;
+}
+
+/* ── Speed Dock ──────────────────────────────── */
+.speed-dock {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+
+.dock-label {
+  font-family: var(--ff-head);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--txt-lo);
+}
+
+.dock-buttons {
+  display: flex;
+  gap: 4px;
+  padding: 5px 7px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 var(--glass-shine);
+}
+
+.spd-btn {
+  background: transparent;
+  border: none;
+  color: var(--txt-mid);
+  font-family: var(--ff-body);
+  font-size: 0.78rem;
+  padding: 7px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.spd-btn:hover { color: var(--txt-hi); background: rgba(79,195,247,0.07); }
+.spd-btn.active {
+  background: rgba(79,195,247,0.16);
+  color: var(--blue);
+  font-weight: 500;
+}
+
+/* ── Info Panel ──────────────────────────────── */
+.info-panel {
+  position: fixed;
+  top: 50%;
+  right: -400px;
+  transform: translateY(-50%);
+  width: 348px;
+  z-index: 200;
+  padding: 28px 22px 24px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow:
+    0 0 80px rgba(79,195,247,0.05),
+    0 24px 64px rgba(0,0,0,0.6),
+    inset 0 1px 0 var(--glass-shine);
+  transition: right 0.45s var(--ease-spring);
+}
+.info-panel.open {
+  right: 22px;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 50%;
+  color: var(--txt-lo);
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s;
+}
+.close-btn:hover { background: rgba(255,255,255,0.12); color: var(--txt-hi); }
+
+/* Panel hero block */
+.panel-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 20px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.planet-orb {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  margin-bottom: 14px;
+  transition: background 0.4s, box-shadow 0.4s;
+}
+
+.planet-name {
+  font-family: var(--ff-head);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--txt-hi);
+  margin-bottom: 5px;
+}
+
+.planet-type {
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+/* Stats grid */
+.stat-grid {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 13px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+}
+
+.stat-key {
+  font-size: 0.73rem;
+  font-weight: 300;
+  color: var(--txt-lo);
+  flex-shrink: 0;
+}
+
+.stat-val {
+  font-family: var(--ff-head);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--blue);
+  text-align: right;
+}
+
+/* Description */
+.planet-desc {
+  font-size: 0.8rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--txt-mid);
+  font-style: italic;
+}
+
+/* ── Controls Dock (bottom-right) ───────────── */
+.controls-dock {
+  position: fixed;
+  bottom: 30px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ctrl-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4), inset 0 1px 0 var(--glass-shine);
+  color: var(--txt-lo);
+  font-family: var(--ff-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+}
+.ctrl-btn:hover { color: var(--txt-hi); background: rgba(79,195,247,0.07); border-color: rgba(79,195,247,0.25); }
+.ctrl-btn.active { color: var(--blue); border-color: rgba(79,195,247,0.28); }
+
+/* Focus button inside panel */
+.focus-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 9px 0;
+  margin-bottom: 16px;
+  background: rgba(79,195,247,0.08);
+  border: 1px solid rgba(79,195,247,0.22);
+  border-radius: 10px;
+  color: var(--blue);
+  font-family: var(--ff-body);
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.16s, border-color 0.16s;
+  letter-spacing: 0.03em;
+}
+.focus-btn:hover { background: rgba(79,195,247,0.16); border-color: rgba(79,195,247,0.4); }
+
+/* ── Hover Tooltip ───────────────────────────── */
+.tooltip {
+  position: fixed;
+  z-index: 400;
+  pointer-events: none;
+  padding: 5px 14px;
+  background: rgba(4,9,22,0.9);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  font-family: var(--ff-head);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--txt-hi);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out);
+  white-space: nowrap;
+}
+.tooltip.show { opacity: 1; }
+
+/* ── Scrollbar ───────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 700px) {
+  .hint-bar { display: none; }
+
+  .info-panel {
+    top: auto;
+    bottom: -100vh;
+    right: 12px; left: 12px;
+    width: auto;
+    transform: none;
+    border-radius: 20px 20px 0 0;
+    transition: bottom 0.42s var(--ease-spring);
+    max-height: 72vh;
+    overflow-y: auto;
+  }
+  .info-panel.open { bottom: 0; right: 12px; left: 12px; }
+
+  .header { padding: 14px 16px; }
+  .logo { font-size: 0.95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-panel { transition: none; }
+}
