@@ -1,17 +1,4 @@
-/* ════════════════════════════════════════════════
-   3D Solar System — script.js  (Realistic Edition)
-   Improvements:
-   · Fresnel atmosphere shader on every planet
-   · Per-planet hand-crafted procedural textures
-   · Earth: continent shapes, ice caps, animated cloud layer
-   · Earth's Moon orbiting Earth
-   · Multi-layer animated Sun with pulsing corona
-   · Saturn: 4-band ring system with Cassini Division
-   · Colored starfield (O/B/A/F/G/K/M spectral types)
-   · Nebula backdrop sphere
-   · Camera fly-to on planet click
-   · Reset camera + toggle orbit lines
-   ════════════════════════════════════════════════ */
+
 
 (() => {
   'use strict';
